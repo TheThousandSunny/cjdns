@@ -88,6 +88,51 @@ it will be downloaded and installed in the source tree.
 
     sudo apt-get install nodejs git build-essential python2.7
 
+##### Raspbian
+
+    sudo apt-get install cmake git build-essential
+    git clone git://gist.github.com/3435341.git cjdns_init_script
+    cd cjdns_init_script 
+    sudo ln -s /path/to/script/hyperboria.sh /etc/init.d/cjdns
+    sudo chmod +x /etc/init.d/cjdns
+    sudo /etc/init.d/cjdns install
+    
+If you get a gcc error, That's because raspbian has v.6 gcc by default but CJDNS requires v4.7. Upgrade it by puting this in to `/etc/apt/sources.list`
+
+    # Source repository to add
+    deb-src http://archive.raspbian.org/raspbian wheezy main contrib non-free rpi
+    deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi
+    deb http://archive.raspbian.org/raspbian jessie main contrib non-free rpi
+    # Source repository to add
+    deb-src http://archive.raspbian.org/raspbian jessie main contrib non-free rpi
+Add some package preferences in `/etc/apt/preferences`
+
+    Package: *
+    Pin: release n=wheezy
+    Pin-Priority: 900
+    Package: *
+    Pin: release n=jessie
+    Pin-Priority: 300
+    Package: *
+    Pin: release o=Raspbian
+    Pin-Priority: -10
+Finally, Grab the Package and Install it:
+
+    
+
+    sudo apt-get update
+    sudo apt-get install -t jessie gcc-4.8 g++-4.8
+    sudo update-alternatives --remove-all gcc
+    sudo update-alternatives --remove-all g++
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 20
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.6 20
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+    sudo gcc --version
+
+Enable Ipv6: `sudo mobprobe ipv6` and start it:
+`sudo /etc/init.d/cjdns start
+
 #### Fedora 22+ based distro:
 
     sudo dnf install install nodejs git
